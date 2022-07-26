@@ -6,7 +6,6 @@
     grid-row-gap: 20px;
     align-items: center;
     justify-content: center;
-    padding-top: 20vh;
 }
 
 .board {
@@ -16,13 +15,12 @@
     justify-content: center;
     width: 100%;
     height: 100vh;
+    gap: 30px;
     background: linear-gradient(343deg, rgba(0,0,0,1) 0%, rgba(50,50,50,1) 100%);
 }
 
-.button {
-    margin-top: 30px;
-}
 
-.squares.disabled {
-    pointer-events: none;
+.game-status {
+    color: white;
+    font-size: 2rem;
 }

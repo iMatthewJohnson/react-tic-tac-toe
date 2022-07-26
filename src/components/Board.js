@@ -7,30 +7,27 @@ export default function Board(props) {
 
     const [squares, setSquares] = React.useState(Array(9).fill(null))
     const [isXNext, setIsXNext] = React.useState(true)
-    const [hasGameStarted, setHasGameStarted] = React.useState(false)
+    const [gameHasStarted, setGameHasStarted] = React.useState(false)
 
     const winner = calculateWinner(squares)
 
-    function handleClick(i) {
-        if (!winner && squares[i] == null) {
+    function handleSquareClick(i) {
+        setGameHasStarted(true)
+        // If there's no winner AND no value currently at this square,
+        // then set to either x or o
+        if (!winner && !squares[i]) {
             setSquares(prevSquares => {
                 const newSquares = prevSquares.slice()
                 newSquares[i] = isXNext ? "X" : "O"
                 return newSquares
             })
-            setIsXNext(prevState => !prevState)
+            setIsXNext(prevIsXNext => !prevIsXNext)
         }
     }
 
     function resetGame() {
         setSquares(Array(9).fill(null))
-    }
-
-    function handleClickButton() {
-        setHasGameStarted(prevState => {
-            if (prevState) resetGame()
-            return !prevState
-        })
+        setGameHasStarted(false)
     }
 
     const squareComponents = squares.map((value, index) =>
@@ -38,26 +35,30 @@ export default function Board(props) {
             key={index}
             index={index}
             value={value}
-            onClick={handleClick}
+            onClick={handleSquareClick}
+            disabled={winner || squares[index]}
         />)
 
     return (
         <div className="board">
-            <div className={"squares " + (hasGameStarted && !winner ? "" : "disabled")}>
+            <span className="game-status">{winner ? `The winner is ${isXNext ? "O" : "X"}` : `The next player is ${isXNext ? "X" : "O"}`}</span>
+            <div className="squares">
                 {squareComponents}
             </div>
             <Button
-                onClick={handleClickButton}
+                onClick={resetGame}
                 className="button"
-                variant={hasGameStarted ? "secondary" : "success"}
-                size="lg">
-                {hasGameStarted ? "Restart" : "Start"}
+                variant="primary"
+                size="lg"
+                disabled={!gameHasStarted}>
+                    Restart
             </Button>
         </div>
     )
 }
 
 function calculateWinner(squares) {
+    // Each item in array is a possible "win" combination
     const lines = [
         [0, 1, 2],
         [3, 4, 5],
